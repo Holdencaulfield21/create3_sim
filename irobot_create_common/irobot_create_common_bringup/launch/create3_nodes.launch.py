@@ -14,7 +14,9 @@ from launch_ros.actions import Node
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
-                          description='Which gazebo simulator to use')
+                          description='Which gazebo simulator to use'),
+    DeclareLaunchArgument('namespace', default_value='create3_ns',
+                        description='Robot namespace')
 ]
 
 
@@ -44,13 +46,15 @@ def generate_launch_description():
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([control_launch_file])
+        PythonLaunchDescriptionSource([control_launch_file]),
+        launch_arguments=[('namespace', LaunchConfiguration('namespace'))]
     )
 
     # Publish hazards vector
     hazards_vector_node = Node(
         package='irobot_create_nodes',
         name='hazards_vector_publisher',
+        namespace=LaunchConfiguration('namespace'),
         executable='hazards_vector_publisher',
         parameters=[hazards_params_yaml_file,
                     {'use_sim_time': True}],
@@ -61,6 +65,7 @@ def generate_launch_description():
     ir_intensity_vector_node = Node(
         package='irobot_create_nodes',
         name='ir_intensity_vector_publisher',
+        namespace=LaunchConfiguration('namespace'),
         executable='ir_intensity_vector_publisher',
         parameters=[ir_intensity_params_yaml_file,
                     {'use_sim_time': True}],
@@ -71,6 +76,7 @@ def generate_launch_description():
     motion_control_node = Node(
         package='irobot_create_nodes',
         name='motion_control',
+        namespace=LaunchConfiguration('namespace'),
         executable='motion_control',
         parameters=[{'use_sim_time': True}],
         output='screen',
@@ -80,6 +86,7 @@ def generate_launch_description():
     wheel_status_node = Node(
         package='irobot_create_nodes',
         name='wheel_status_publisher',
+        namespace=LaunchConfiguration('namespace'),
         executable='wheel_status_publisher',
         parameters=[wheel_status_params_yaml_file,
                     {'use_sim_time': True}],
@@ -100,6 +107,7 @@ def generate_launch_description():
     robot_state_node = Node(
         package='irobot_create_nodes',
         name='robot_state',
+        namespace=LaunchConfiguration('namespace'),
         executable='robot_state',
         parameters=[robot_state_yaml_file,
                     {'use_sim_time': True}],
@@ -110,6 +118,7 @@ def generate_launch_description():
     kidnap_estimator_node = Node(
         package='irobot_create_nodes',
         name='kidnap_estimator_publisher',
+        namespace=LaunchConfiguration('namespace'),
         executable='kidnap_estimator_publisher',
         parameters=[kidnap_estimator_yaml_file,
                     {'use_sim_time': True}],

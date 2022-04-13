@@ -10,7 +10,9 @@ from launch_ros.actions import Node
 
 ARGUMENTS = [
     DeclareLaunchArgument('robot_name', default_value='create3',
-                          description='Robot name')
+                          description='Robot name'),
+    DeclareLaunchArgument('namespace', default_value='create3_ns',
+                        description='Robot namespace')
 ]
 
 
@@ -28,6 +30,7 @@ def generate_launch_description():
     pose_republisher_node = Node(
         package='irobot_create_ignition_toolbox',
         name='pose_republisher_node',
+        namespace=LaunchConfiguration('namespace'),
         executable='pose_republisher_node',
         parameters=[pose_republisher_params_yaml_file,
                     {'robot_name': LaunchConfiguration('robot_name')},
@@ -39,6 +42,7 @@ def generate_launch_description():
     sensors_node = Node(
         package='irobot_create_ignition_toolbox',
         name='sensors_node',
+        namespace=LaunchConfiguration('namespace'),
         executable='sensors_node',
         parameters=[sensors_params_yaml_file,
                     {'use_sim_time': True}],
@@ -49,6 +53,7 @@ def generate_launch_description():
     interface_buttons_node = Node(
         package='irobot_create_ignition_toolbox',
         name='interface_buttons_node',
+        namespace=LaunchConfiguration('namespace'),
         executable='interface_buttons_node',
         parameters=[{'use_sim_time': True}],
         output='screen',

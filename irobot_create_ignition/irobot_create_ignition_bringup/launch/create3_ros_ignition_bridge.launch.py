@@ -15,12 +15,14 @@ ARGUMENTS = [
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Ignition model name'),
     DeclareLaunchArgument('world', default_value='depot',
-                          description='World name')
+                          description='World name'),
+    DeclareLaunchArgument('namespace', default_value='create3',
+                        description='Turtlebot4 namespace')
 ]
 
 
 def generate_launch_description():
-    namespace = LaunchConfiguration('robot_name')
+    namespace = LaunchConfiguration('namespace')
     use_sim_time = LaunchConfiguration('use_sim_time')
 
     cliff_sensors = [
@@ -53,6 +55,7 @@ def generate_launch_description():
     # cmd_vel bridge
     cmd_vel_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
                           name='cmd_vel_bridge',
+                          namespace=namespace,
                           output='screen',
                           parameters=[{
                               'use_sim_time': use_sim_time

@@ -55,6 +55,7 @@
   <xacro:property name="dock_model_name" value="standard_dock"/>
   <xacro:property name="emitter_link_name" value="halo_link"/>
   <xacro:arg name="visualize_rays" default="false"/>
+  <xacro:arg name="namespace" default=""/>
   <!-- Create 3 base definition-->
   <link name="base_link">
     <visual>
@@ -125,6 +126,10 @@
     <gazebo>
       <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
         <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        <ros>
+          <namespace>$(arg namespace)</namespace>
+          <remapping>/tf:=/$(arg namespace)/tf</remapping>
+        </ros>
       </plugin>
     </gazebo>
   </xacro:if>
