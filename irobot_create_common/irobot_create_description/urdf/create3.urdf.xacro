@@ -128,7 +128,7 @@
         <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
         <ros>
           <namespace>$(arg namespace)</namespace>
-          <remapping>/tf:=/$(arg namespace)/tf</remapping>
+          <!-- <remapping>/tf:=/$(arg namespace)/tf</remapping> -->
         </ros>
       </plugin>
     </gazebo>
