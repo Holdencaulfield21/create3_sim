@@ -16,7 +16,7 @@ ARGUMENTS = [
                           description='Ignition model name'),
     DeclareLaunchArgument('world', default_value='depot',
                           description='World name'),
-    DeclareLaunchArgument('namespace', default_value='create3',
+    DeclareLaunchArgument('namespace', default_value='',
                         description='Turtlebot4 namespace')
 ]
 

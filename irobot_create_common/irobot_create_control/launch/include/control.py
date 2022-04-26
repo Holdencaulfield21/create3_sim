@@ -11,13 +11,13 @@ from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.actions import Node
 
 ARGUMENTS = [
-    DeclareLaunchArgument('namespace', default_value='ns',
+    DeclareLaunchArgument('namespace', default_value='',
                         description='Robot namespace')
 ]
 
 def generate_launch_description():
     namespace = LaunchConfiguration('namespace')
-    ns=['/', namespace, '/controller_manager']
+    ns=[namespace,'/controller_manager']
     pkg_create3_control = get_package_share_directory('irobot_create_control')
 
     control_params_file = PathJoinSubstitution(

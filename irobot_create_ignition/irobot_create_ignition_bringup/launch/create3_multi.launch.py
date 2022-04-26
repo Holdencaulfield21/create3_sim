@@ -17,23 +17,6 @@ from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration, TextSubstitution
 
 
-class OffsetParser(Substitution):
-    def __init__(
-            self,
-            number: SomeSubstitutionsType,
-            offset: float,
-    ) -> None:
-        self.__number = number
-        self.__offset = offset
-
-    def perform(
-            self,
-            context: LaunchContext = None,
-    ) -> str:
-        number = float(self.__number.perform(context))
-        return f'{number + self.__offset}'
-
-
 ARGUMENTS = [
     DeclareLaunchArgument('bridge', default_value='true',
                           choices=['true', 'false'],
@@ -136,96 +119,26 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('use_rviz')),
     )
 
-    # x_dock = OffsetParser(x, 0.157)
-    # yaw_dock = OffsetParser(yaw, 3.1416)
-    # dock_description = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([dock_description_launch]),
-    #     condition=IfCondition(LaunchConfiguration('spawn_dock')),
-    #     # The robot starts docked
-    #     launch_arguments={'x': x_dock, 'y': y, 'z': z, 'yaw': yaw_dock,
-    #                       'gazebo': 'ignition'}.items(),
-    # )
-
-    # robot_description = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([robot_description_launch]),
-    #     launch_arguments={'gazebo': 'ignition'}.items()
-    # )
-
-    robots = gen_robot_list(1)
+    robots = gen_robot_list(2)
     spawn_robots_cmds = []
     for robot in robots:
-        spawn_robots_cmds.append(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(os.path.join(pkg_irobot_create_ignition_bringup, 'launch',
-                                                           'create3_multi_spawn.launch.py')),
-                launch_arguments={
+        spawn_robots_cmds.append(IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(pkg_irobot_create_ignition_bringup, 'launch',
+                                                           'create3_spawn.launch.py')),
+                                launch_arguments={
                                   'x': TextSubstitution(text=str(robot['x_pose'])),
                                   'y': TextSubstitution(text=str(robot['y_pose'])),
                                   'z': TextSubstitution(text=str(robot['z_pose'])),
                                   'robot_name': robot['name'],
+                                  'namespace': robot['name'],
                                   'robot_description': robot['robot_description']
                                   }.items()))
-
-    # Dock
-    # spawn_dock = Node(package='ros_ign_gazebo', executable='create',
-    #                   arguments=['-name', 'standard_dock',
-    #                              '-x', x_dock,
-    #                              '-y', y,
-    #                              '-z', z,
-    #                              '-Y', '3.141592',
-    #                              '-topic', 'standard_dock_description'],
-    #                   output='screen')
-
-    # ROS Ign bridge
-    ros_ignition_cmds = []
-    for robot in robots:
-        spawn_robots_cmds.append(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([ros_ign_bridge_launch]),
-                launch_arguments=[('world', LaunchConfiguration('world')),
-                                ('robot_name', LaunchConfiguration('robot_name')),
-                                ('namespace', robot['name'])]
-            ))
-
-    # ros_ign_bridge = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([ros_ign_bridge_launch]),
-    #     launch_arguments=[('world', LaunchConfiguration('world')),
-    #                       ('robot_name', LaunchConfiguration('robot_name'))]
-    # )
-
-    # Create3 nodes
-    create3_nodes_cmds = []
-    for robot in robots:
-        create3_nodes_cmds.append(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([create3_nodes_launch]),
-                launch_arguments=[('namespace', robot['name'])]
-            ))
-
-    create3_ignition_nodes_cmds = []
-    for robot in robots:
-        create3_nodes_cmds.append(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([create3_ignition_nodes_launch]),
-                launch_arguments=[('robot_name', LaunchConfiguration('robot_name')),
-                                  ('namespace', robot['name'])]
-            ))
 
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(ign_resource_path)
     ld.add_action(ign_gui_plugin_path)
     ld.add_action(ignition_gazebo)
-    for ros_ignition_cmd in ros_ignition_cmds:
-        ld.add_action(ros_ignition_cmd)
-    ld.add_action(rviz2)
-    # ld.add_action(dock_description)
     for spawn_robots_cmd in spawn_robots_cmds:
         ld.add_action(spawn_robots_cmd)
-    # ld.add_action(spawn_dock)
 
-    for create3_nodes_cmd in create3_nodes_cmds:
-        ld.add_action(create3_nodes_cmd)
-    for create3_ignition_nodes_cmd in create3_ignition_nodes_cmds:
-        ld.add_action(create3_ignition_nodes_cmd)
     return ld
