@@ -1,5 +1,5 @@
 ---
-/**:
+sensors_node:
   ros__parameters:
     cliff_subscription_topics:
       - _internal/cliff_front_left/scan

@@ -119,7 +119,7 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('use_rviz')),
     )
 
-    robots = gen_robot_list(2)
+    robots = gen_robot_list(1)
     spawn_robots_cmds = []
     for robot in robots:
         spawn_robots_cmds.append(IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(pkg_irobot_create_ignition_bringup, 'launch',

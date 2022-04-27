@@ -17,7 +17,7 @@ ARGUMENTS = [
 
 def generate_launch_description():
     namespace = LaunchConfiguration('namespace')
-    ns=[namespace,'/controller_manager']
+    namespaced_node_name=[namespace,'/controller_manager']
     pkg_create3_control = get_package_share_directory('irobot_create_control')
 
     control_params_file = PathJoinSubstitution(
@@ -28,7 +28,7 @@ def generate_launch_description():
         executable='spawner',
         namespace=LaunchConfiguration('namespace'),
         parameters=[control_params_file],
-        arguments=['diffdrive_controller', '-c', ns],
+        arguments=['diffdrive_controller', '-c', namespaced_node_name],
         output='screen',
     )
 
@@ -36,7 +36,7 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         namespace=LaunchConfiguration('namespace'),
-        arguments=['joint_state_broadcaster', '-c', ns],
+        arguments=['joint_state_broadcaster', '-c', namespaced_node_name],
         output='screen',
     )
 
