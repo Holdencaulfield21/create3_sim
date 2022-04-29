@@ -118,6 +118,9 @@
     <gazebo>
       <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
         <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        <ros>
+          <namespace>$(arg namespace)</namespace>
+        </ros>
       </plugin>
     </gazebo>
   </xacro:if>
@@ -128,7 +131,6 @@
         <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
         <ros>
           <namespace>$(arg namespace)</namespace>
-          <!-- <remapping>/tf:=/$(arg namespace)/tf</remapping> -->
         </ros>
       </plugin>
     </gazebo>

@@ -7,14 +7,30 @@ from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 
-from launch import LaunchDescription
+from launch import LaunchDescription, LaunchContext, SomeSubstitutionsType, Substitution
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
-from irobot_create_dock_common import offset_parser
+
+
+class OffsetParser(Substitution):
+    def __init__(
+            self,
+            number: SomeSubstitutionsType,
+            offset: float,
+    ) -> None:
+        self.__number = number
+        self.__offset = offset
+
+    def perform(
+            self,
+            context: LaunchContext = None,
+    ) -> str:
+        number = float(self.__number.perform(context))
+        return f'{number + self.__offset}'
 
 
 ARGUMENTS = [
@@ -33,8 +49,8 @@ ARGUMENTS = [
     DeclareLaunchArgument('spawn_dock', default_value='true',
                           choices=['true', 'false'],
                           description='Spawn the standard dock model.'),
-    DeclareLaunchArgument('robot_description', default_value='/robot_description',
-                          description='robot description topic'),
+    DeclareLaunchArgument('namespace', default_value='',
+                            description='robot namespace'),
 ]
 for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',
@@ -80,7 +96,8 @@ def generate_launch_description():
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
     robot_name = LaunchConfiguration('robot_name')
-    robot_description = LaunchConfiguration('robot_description')
+    namespace = LaunchConfiguration('namespace')
+    namespaced_robot_description = [namespace,'/robot_description']
 
     # Ignition gazebo
     ignition_gazebo = IncludeLaunchDescription(
@@ -100,8 +117,8 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('use_rviz')),
     )
 
-    x_dock = offset_parser.OffsetParser(x, 0.157)
-    yaw_dock = offset_parser.OffsetParser(yaw, 3.1416)
+    x_dock = OffsetParser(x, 0.157)
+    yaw_dock = OffsetParser(yaw, 3.1416)
     dock_description = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([dock_description_launch]),
         condition=IfCondition(LaunchConfiguration('spawn_dock')),
@@ -118,7 +135,8 @@ def generate_launch_description():
                                   'y': y,
                                   'z': z,
                                   'robot_name': robot_name,
-                                  'robot_description': robot_description
+                                  'robot_description': namespaced_robot_description,
+                                  'namespace':namespace,
                                   }.items())
 
     # Dock

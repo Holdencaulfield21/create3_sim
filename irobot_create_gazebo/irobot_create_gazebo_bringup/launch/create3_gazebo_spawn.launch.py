@@ -53,34 +53,27 @@ def generate_launch_description():
     robot_name = LaunchConfiguration('robot_name')
     robot_description = LaunchConfiguration('robot_description')
     namespace = LaunchConfiguration('namespace')
-
+    gazebo = LaunchConfiguration('gazebo')
 
     # Spawn robot 
     spawn_robot = Node(
-            package='ros_ign_gazebo',
-            executable='create',
-            output='screen',
-            arguments=[
-                '-name', robot_name,
-                '-topic', robot_description,
-                '-Y', yaw,
-                '-x', x,
-                '-y', y,
-                '-z', z])
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        name='spawn_create3',
+        arguments=['-entity', robot_name,
+                   '-topic', robot_description,
+                   '-x', x,
+                   '-y', y,
+                   '-z', z,
+                   '-Y', yaw],
+        output='screen',
+    )
 
     # Robot description
     robot_description_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([robot_description_launch]),
-            launch_arguments={'gazebo': 'ignition', 'namespace': namespace}.items())
+            launch_arguments={'gazebo': gazebo, 'namespace': namespace}.items())
 
-    # ROS Ign bridge
-    ros_ign_bridge = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([ros_ign_bridge_launch]),
-        launch_arguments=[('world', LaunchConfiguration('world')),
-                          ('robot_name', robot_name),
-                            ('namespace', namespace)]
-        
-    )
 
     # Create3 nodes
     create3_nodes = IncludeLaunchDescription(
@@ -88,17 +81,10 @@ def generate_launch_description():
                 launch_arguments=[('namespace', namespace)]
                 )
 
-    create3_ignition_nodes = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([create3_ignition_nodes_launch]),
-        launch_arguments=[('robot_name', LaunchConfiguration('robot_name')),
-                                  ('namespace', namespace)]
-    )
-
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(spawn_robot)
-    ld.add_action(ros_ign_bridge)
     ld.add_action(robot_description_launch)
+    # Include Create 3 nodes
     ld.add_action(create3_nodes)
-    ld.add_action(create3_ignition_nodes)
     return ld
