@@ -16,8 +16,9 @@ ARGUMENTS = [
                           choices=['classic', 'ignition'],
                           description='Which gazebo simulator to use'),
     DeclareLaunchArgument('namespace', default_value='',
-                        description='Robot namespace')
+                          description='Robot namespace')
 ]
+
 
 def generate_launch_description():
 

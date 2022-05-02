@@ -17,7 +17,7 @@ ARGUMENTS = [
     DeclareLaunchArgument('world', default_value='depot',
                           description='World name'),
     DeclareLaunchArgument('namespace', default_value='',
-                        description='Turtlebot4 namespace')
+                          description='Turtlebot4 namespace')
 ]
 
 
