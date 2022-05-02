@@ -18,6 +18,7 @@
   <exec_depend>irobot_create_description</exec_depend>
   <exec_depend>irobot_create_gazebo_plugins</exec_depend>
   <exec_depend>ros2launch</exec_depend>
+  <exec_depend>irobot_create_common_dock</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_cmake_cppcheck</test_depend>
