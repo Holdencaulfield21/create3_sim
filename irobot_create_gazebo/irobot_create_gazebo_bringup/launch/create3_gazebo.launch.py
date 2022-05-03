@@ -16,7 +16,7 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
-from irobot_create_common_dock.offset_parser import OffsetParser
+from irobot_create_common_bringup.offset_parser import OffsetParser
 
 ARGUMENTS = [
     DeclareLaunchArgument('use_rviz', default_value='true',
