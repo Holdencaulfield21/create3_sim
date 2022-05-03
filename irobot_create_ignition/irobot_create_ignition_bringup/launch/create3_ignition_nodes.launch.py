@@ -12,7 +12,7 @@ ARGUMENTS = [
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Robot name'),
     DeclareLaunchArgument('namespace', default_value='create3_ns',
-                        description='Robot namespace')
+                          description='Robot namespace')
 ]
 
 

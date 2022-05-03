@@ -7,7 +7,7 @@ from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 
-from launch import LaunchDescription, LaunchContext, SomeSubstitutionsType, Substitution
+from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.conditions import IfCondition
@@ -35,11 +35,12 @@ ARGUMENTS = [
                           choices=['true', 'false'],
                           description='Spawn the standard dock model.'),
     DeclareLaunchArgument('namespace', default_value='',
-                            description='robot namespace'),
+                          description='robot namespace'),
 ]
 for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',
                      description=f'{pose_element} component of the robot pose.'))
+
 
 def generate_launch_description():
 
@@ -78,11 +79,12 @@ def generate_launch_description():
         [pkg_irobot_create_common_bringup, 'launch', 'rviz2.launch.py'])
 
     # Launch configurations
-    x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
+    x, y, z = LaunchConfiguration('x'), LaunchConfiguration(
+        'y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
     robot_name = LaunchConfiguration('robot_name')
     namespace = LaunchConfiguration('namespace')
-    namespaced_robot_description = [namespace,'/robot_description']
+    namespaced_robot_description = [namespace, '/robot_description']
 
     # Ignition gazebo
     ignition_gazebo = IncludeLaunchDescription(
@@ -113,16 +115,16 @@ def generate_launch_description():
     )
 
     # Create3
-    spawn_robot = IncludeLaunchDescription(PythonLaunchDescriptionSource(os.path.join(pkg_irobot_create_ignition_bringup, 'launch',
-                                                           'create3_spawn.launch.py')),
-                                launch_arguments={
-                                  'x': x,
-                                  'y': y,
-                                  'z': z,
-                                  'robot_name': robot_name,
-                                  'robot_description': namespaced_robot_description,
-                                  'namespace':namespace,
-                                  }.items())
+    spawn_robot = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(pkg_irobot_create_ignition_bringup, 'launch',
+                                                   'create3_spawn.launch.py')),
+        launch_arguments={'x': x,
+                          'y': y,
+                          'z': z,
+                          'robot_name': robot_name,
+                          'robot_description': namespaced_robot_description,
+                          'namespace': namespace,
+                          }.items())
 
     # Dock
     spawn_dock = Node(package='ros_ign_gazebo', executable='create',
@@ -133,8 +135,6 @@ def generate_launch_description():
                                  '-Y', '3.141592',
                                  '-topic', 'standard_dock_description'],
                       output='screen')
-
-    
 
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)

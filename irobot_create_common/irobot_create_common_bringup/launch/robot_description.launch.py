@@ -18,7 +18,7 @@ ARGUMENTS = [
                           choices=['true', 'false'],
                           description='Enable/disable ray visualization'),
     DeclareLaunchArgument('namespace', default_value='',
-                        description='Create3 namespace')
+                          description='Create3 namespace')
 ]
 
 
@@ -41,7 +41,7 @@ def generate_launch_description():
              Command(
                   ['xacro', ' ', xacro_file, ' ',
                    'gazebo:=', gazebo_simulator, ' ',
-                   'visualize_rays:=', visualize_rays,' ',
+                   'visualize_rays:=', visualize_rays, ' ',
                    'namespace:=', namespace, ' '])},
         ],
     )
