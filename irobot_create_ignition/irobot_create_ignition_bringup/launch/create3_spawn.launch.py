@@ -19,8 +19,7 @@ ARGUMENTS = [
     DeclareLaunchArgument('robot_description', default_value='robot_description',
                           description='robot description topic name'),
     DeclareLaunchArgument('namespace', default_value='',
-                          description='robot namespace'),
-
+                          description='Robot namespace')
 ]
 
 for pose_element in ['x', 'y', 'z', 'yaw']:
