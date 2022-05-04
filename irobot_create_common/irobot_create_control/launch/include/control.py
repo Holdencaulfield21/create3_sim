@@ -27,7 +27,7 @@ def generate_launch_description():
     diffdrive_controller_node = Node(
         package='controller_manager',
         executable='spawner',
-        namespace=LaunchConfiguration('namespace'),
+        namespace=namespace,
         parameters=[control_params_file],
         arguments=['diffdrive_controller', '-c', namespaced_node_name],
         output='screen',
@@ -36,7 +36,7 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        namespace=LaunchConfiguration('namespace'),
+        namespace=namespace,
         arguments=['joint_state_broadcaster', '-c', namespaced_node_name],
         output='screen',
     )
