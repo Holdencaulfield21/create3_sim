@@ -17,7 +17,7 @@ ARGUMENTS = [
     DeclareLaunchArgument('world', default_value='depot',
                           description='World name'),
     DeclareLaunchArgument('namespace', default_value='',
-                        description='Robot namespace')
+                          description='Robot namespace')
 ]
 
 

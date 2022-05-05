@@ -101,6 +101,9 @@ def generate_launch_description():
     rviz2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([rviz2_launch]),
         condition=IfCondition(LaunchConfiguration('use_rviz')),
+        launch_arguments={  'namespace' : namespace,
+                            'use_namespace' : 'True',
+                        }.items(),
     )
 
     x_dock = OffsetParser(x, 0.157)
