@@ -113,6 +113,7 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('spawn_dock')),
         # The robot starts docked
         launch_arguments={'x': x_dock, 'y': y, 'z': z, 'yaw': yaw_dock,
+                          'namespace' : namespace,
                           'gazebo': 'ignition'}.items(),
     )
 
@@ -135,7 +136,7 @@ def generate_launch_description():
                                  '-y', y,
                                  '-z', z,
                                  '-Y', '3.141592',
-                                 '-topic', 'standard_dock_description'],
+                                 '-topic', (namespace, '/standard_dock_description')],
                       output='screen')
 
     # Create launch description and add actions

@@ -61,13 +61,13 @@ def generate_launch_description():
                               'use_sim_time': use_sim_time
                           }],
                           arguments=[
-                              '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist',
-                              ['/model/', LaunchConfiguration('robot_name'), '/cmd_vel' +
+                              ['/',namespace, '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist'],
+                              ['/model/', LaunchConfiguration('robot_name'), 'cmd_vel'+
                                '@geometry_msgs/msg/Twist' +
                                ']ignition.msgs.Twist']
                           ],
                           remappings=[
-                              (['/model/', LaunchConfiguration('robot_name'), '/cmd_vel'],
+                              (['/model/', LaunchConfiguration('robot_name'), 'cmd_vel'],
                                'diffdrive_controller/cmd_vel_unstamped')
                           ])
 
