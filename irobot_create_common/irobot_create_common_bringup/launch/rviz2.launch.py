@@ -4,18 +4,9 @@
 # Launch RViz.
 
 from ament_index_python.packages import get_package_share_directory
-<<<<<<< HEAD
-from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition, UnlessCondition
-from launch.substitutions import LaunchConfiguration
-from launch.substitutions import PathJoinSubstitution
-from launch import LaunchDescription
-=======
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
->>>>>>> d651bfbbf23ded379b677e5eabb1c555b2d6f448
 from launch_ros.actions import Node
 
 ARGUMENTS = [
